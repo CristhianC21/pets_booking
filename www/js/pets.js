@@ -1,8 +1,3 @@
-
-
-
-
-
 function sendNewPet(namePet, surnamePet, datePet) {
   var AllPets = JSON.parse(localStorage.getItem("allPets"));
   const newPet = {
@@ -20,6 +15,14 @@ function sendNewPet(namePet, surnamePet, datePet) {
   window.location.href = "index.html";
 }
 
+function removePet(numIndex){
+  var storedContacts = JSON.parse(localStorage.getItem("allPets"));
+
+  storedContacts.splice(numIndex, 1);
+
+  localStorage.setItem("allPets", JSON.stringify(storedContacts));
+  loadPets();
+}
 
 function removeAll() {
   var storedPets = JSON.parse(localStorage.getItem("allPets"));
@@ -53,38 +56,41 @@ async function removeAllPets() {
     ];
 
     document.body.appendChild(alert);
-    
-      await alert.present();
-      await toast.present();
+
+    await alert.present();
+    await toast.present();
   }
 }
 
-function iconPets(petType){
-  if (petType == 'Dog'){
+function iconPets(petType) {
+  if (petType == 'Dog') {
     return "paw-outline"
   }
-  else if(petType == 'Cat'){
+  else if (petType == 'Cat') {
     return "logo-octocat"
   }
-  else if(petType == 'Bird'){
+  else if (petType == 'Bird') {
     return "logo-twitter"
   }
-  else if(petType == 'Fish'){
+  else if (petType == 'Fish') {
     return "fish-outline"
   }
-  else if(petType == 'Other'){
+  else if (petType == 'Other') {
     return "planet-outline"
   }
 }
 
 function loadPets() {
+    
+
+  //MDMDMDDDDDDDDDDDDDDD
   var AllPets = JSON.parse(localStorage.getItem("allPets"));
   //console.log(messages);
   // console.log(data.toEmail);
   document.getElementById("pets").innerHTML = "";
 
   if (AllPets == null || AllPets.length == 0) {
-    quantityPets = 0; 
+    quantityPets = 0;
     const ionText = document.createElement("ion-text");
     ionText.innerHTML = `<ion-text class="ion-padding">You haven't added any pets
     yet. Please start by clicking on the + icon.</ion-text>`;
@@ -95,8 +101,8 @@ function loadPets() {
     console.log(AllPets);
     for (var i = 0; i < AllPets.length; i++) {
       const ionitem = document.createElement("ion-item");
-
       const item = AllPets[i];
+      type = iconPets
       console.log(item);
       ionitem.innerHTML = `
                   <ion-icon size="large" name="${iconPets(item.typePetLocal)}" slot="start"></ion-icon>
@@ -104,7 +110,19 @@ function loadPets() {
                     <h1>${item.namePetLocal}</h1>
                     <p>Birthday/Adopted: ${item.datPetLocal}</p>
                     <p>Creation date: ${item.adoptionDate}</p>
+                    <ion-button fill="clear" id="captureButton">
+                      <ion-icon color="colorapp" name="camera"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" onclick="">
+                      <ion-icon color="colorapp" name="images"></ion-icon>
+                      </ion-button>
+                    
+                    <img id="capturedButton">
                   </ion-label>
+                  <ion-button color="colorapp" onclick="removePet(${i})">
+                    <ion-icon name="trash-outline"></ion-icon>
+                  </ion-button>
+                  <ion-reorder slot="end"></ion-reorder>
                
         `;
 
@@ -112,6 +130,9 @@ function loadPets() {
       document.getElementById("pets").appendChild(ionitem);
     }
   }
-  document.getElementById("numPets").innerHTML = quantityPets;
+  document.getElementById("routerLink").setAttribute('href','/');
+  // document.getElementById("routerLink").removeAttribute('href');
+  document.getElementById('numPets').innerHTML= quantityPets;
+  
 }
 

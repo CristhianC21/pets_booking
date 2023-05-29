@@ -1,62 +1,16 @@
 currentPetTpye = "";
 quantityPets = 0;
-function loadTypes() {
-    const petTypes = [
-        {
-            id: 1,
-            name: "Dog",
-        },
-        {
-            id: 2,
-            name: "Cat",
-        },
-        {
-            id: 3,
-            name: "Bird",
-        },
-        {
-            id: 4,
-            name: "Fish",
-        },
-        {
-            id: 5,
-            name: "Other",
-        },
-    ];
-
-    const compareWithFn = (o1, o2) => {
-        return o1 && o2 ? o1.id === o2.id : o1 === o2;
-    };
-
-    const selectEl = document.querySelector('ion-select');
-    selectEl.compareWith = compareWithFn;
-
-    petTypes.forEach((option, i) => {
-        const selectOption = document.createElement('ion-select-option');
-        selectOption.value = option;
-        selectOption.textContent = option.name;
-        selectEl.appendChild(selectOption);
-    });
-
-
-    selectEl.addEventListener('ionChange', () => {
-
-        console.log(selectEl.value.name);
-        currentPetTpye = selectEl.value.name;
-    });
-
-}
 
 async function savePet() {
     const alert = document.createElement("ion-alert");
-    petName = document.getElementById("newPetName").value;
-    petType = currentPetTpye;
-    petDate = document.getElementById("newAdopDate").value;
-    medicalHistory = document.getElementById("medicalHistory").value;
+    petName = document.getElementById("newPetName");
+    petType = document.querySelector('#type');
+    petDate = document.getElementById("newAdopDate");
+    medicalHistory = document.getElementById("medicalHistory");
+    console.log("PET TYPE+___>",petType.value);
+    console.log(petName.value, petType.value, petDate.value, medicalHistory.value);
 
-    console.log(petName, petType, petDate, medicalHistory);
-
-    if (petName == "" || petType == "" || petDate == "") {
+    if (petName.value == "" || petType.value == "" || petDate.value == "") {
         alert.header = "MyPets";
         alert.message = "Please fill all the details";
         alert.buttons = ["OK"];
@@ -72,7 +26,17 @@ async function savePet() {
                 text: "OK",
                 role: "confirm",
                 handler: () => {
-                    sendNewPet(petName, petType, petDate, medicalHistory);
+                    sendNewPet(quantityPets,petName.value, petType.value, petDate.value, medicalHistory.value);
+                    loadPets();
+                    document.querySelector('#tabMain').select('list');
+                    
+                    petName.value = '';
+                    petName.placeholder = 'Pet name (ex: Spencer)';
+                    document.querySelector('ion-select').innerHTML = 'Select Pet Type';
+                    petDate.value = '';
+                    petDate.placeholder = 'Birthday/Adoption Date dd/mm/yyyy';
+                    medicalHistory.value = '';
+                    medicalHistory.placeholder = 'Enter the Medical History of your pet if required.';
                 },
             },
         ];
@@ -88,9 +52,10 @@ function getTimestamp(){
 }
 
 
-function sendNewPet(namePet, surnamePet, datePet, medicalHistoryPet) {
+function sendNewPet(indexPos,namePet, surnamePet, datePet, medicalHistoryPet) {
     var AllPets = JSON.parse(localStorage.getItem("allPets"));
     const newPet = {
+        indexPosLocal : indexPos,
         namePetLocal: namePet,
         typePetLocal: surnamePet,
         datPetLocal: datePet,
@@ -104,6 +69,5 @@ function sendNewPet(namePet, surnamePet, datePet, medicalHistoryPet) {
 
     AllPets.push(newPet);
     localStorage.setItem("allPets", JSON.stringify(AllPets));
-    window.location.href = "index.html";
+    document.getElementById('routerLink').setAttribute("href","/")
 }
-
