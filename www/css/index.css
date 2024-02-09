@@ -1,0 +1,6 @@
+#deviceready.ready .event.listening {
+  display: none;
+}
+#deviceready.ready .event.received {
+  display: block;
+}

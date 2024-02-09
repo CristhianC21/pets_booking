@@ -4,6 +4,7 @@ function sendNewPet(namePet, surnamePet, datePet) {
     namePetLocal: namePet,
     typePetLocal: surnamePet,
     datPetLocal: datePet,
+    imageAnimal: []
   };
 
   if (AllPets == null) {
@@ -15,7 +16,7 @@ function sendNewPet(namePet, surnamePet, datePet) {
   window.location.href = "index.html";
 }
 
-function removePet(numIndex){
+function removePet(numIndex) {
   var storedContacts = JSON.parse(localStorage.getItem("allPets"));
 
   storedContacts.splice(numIndex, 1);
@@ -81,12 +82,9 @@ function iconPets(petType) {
 }
 
 function loadPets() {
-    
 
-  //MDMDMDDDDDDDDDDDDDDD
+
   var AllPets = JSON.parse(localStorage.getItem("allPets"));
-  //console.log(messages);
-  // console.log(data.toEmail);
   document.getElementById("pets").innerHTML = "";
 
   if (AllPets == null || AllPets.length == 0) {
@@ -97,7 +95,7 @@ function loadPets() {
 
     document.getElementById("pets").appendChild(ionText);
   } else {
-    quantityPets = AllPets.length
+    quantityPets = AllPets.length;
     console.log(AllPets);
     for (var i = 0; i < AllPets.length; i++) {
       const ionitem = document.createElement("ion-item");
@@ -105,34 +103,40 @@ function loadPets() {
       type = iconPets
       console.log(item);
       ionitem.innerHTML = `
-                  <ion-icon size="large" name="${iconPets(item.typePetLocal)}" slot="start"></ion-icon>
-                  <ion-label>
-                    <h1>${item.namePetLocal}</h1>
-                    <p>Birthday/Adopted: ${item.datPetLocal}</p>
-                    <p>Creation date: ${item.adoptionDate}</p>
-                    <ion-button fill="clear" id="captureButton">
-                      <ion-icon color="colorapp" name="camera"></ion-icon>
-                    </ion-button>
-                    <ion-button fill="clear" onclick="">
-                      <ion-icon color="colorapp" name="images"></ion-icon>
-                      </ion-button>
-                    
-                    <img id="capturedButton">
-                  </ion-label>
-                  <ion-button color="colorapp" onclick="removePet(${i})">
-                    <ion-icon name="trash-outline"></ion-icon>
-                  </ion-button>
-                  <ion-reorder slot="end"></ion-reorder>
+      <ion-icon size="large" name="${iconPets(item.typePetLocal)}" slot="start"></ion-icon>
+    <ion-label>
+      <h1>${item.namePetLocal}</h1>
+      <p>Birthday/Adopted: ${item.datPetLocal}</p>
+      <p>Creation date: ${item.adoptionDate}</p>
+      <ion-buttons slot="start">
+        <ion-button onclick="captureImage(${i})">
+          <ion-icon color="colorapp" name="camera"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+
+      <ion-buttons>
+        <ion-button onclick="openModal(${i})">
+          <ion-icon color="colorapp" name="images"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+
+    </ion-label>
+    <ion-button color="colorapp" onclick="removePet(${i})">
+      <ion-icon name="trash-outline"></ion-icon>
+    </ion-button>
+    <ion-reorder slot="end"></ion-reorder>
                
+    <div id="image-modal"></div>
+
         `;
 
 
       document.getElementById("pets").appendChild(ionitem);
     }
   }
-  document.getElementById("routerLink").setAttribute('href','/');
+  document.getElementById("routerLink").setAttribute('href', '/');
   // document.getElementById("routerLink").removeAttribute('href');
-  document.getElementById('numPets').innerHTML= quantityPets;
-  
+  document.getElementById('numPets').innerHTML = quantityPets;
+
 }
 

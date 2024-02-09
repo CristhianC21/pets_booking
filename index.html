@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+  <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
+
+  <link rel="stylesheet " href="www/css/style.css">
+  <link rel="stylesheet " href="www/css/darkMode.css">
+
+  <link rel="stylesheet" href="www/css/index.css">
+
+  <script src="www/js/pets.js"></script>
+  <script src="www/js/add.js"></script>
+
+  <title>My Pets</title>
+</head>
+
+<body id="body" onload="loadPets()">
+  <ion-app>
+    <!-- <div id="deviceready" class="blink"> -->
+
+    <ion-tabs id="tabMain">
+      <ion-tab tab="list">
+        <ion-nav id="list-nav"></ion-nav>
+        <!-- HEADER -->
+        <ion-header>
+          <ion-toolbar>
+            <ion-title slot="start" color="colorapp"><ion-icon name="paw-outline"></ion-icon> MyPets <ion-badge
+                color="colorapp" id="numPets">0</ion-badge></ion-title>
+
+            <div slot="start" id="connection-warning">
+              <ion-icon name="warning-outline"></ion-icon>
+              NO NETWORK CONNECTION
+            </div>
+            <ion-buttons slot="end">
+              <ion-button color="colorapp" onclick="removeAllPets()">
+                <ion-icon name="trash-outline"></ion-icon>
+                <ion-label>&nbsp;CLEAR</ion-label>
+                <div class="verticalLine"></div>
+              </ion-button>
+              <ion-icon color="colorapp" slot="start" name="moon"></ion-icon>
+              <ion-toggle color="colorapp" id="themeToggle" slot="end"></ion-toggle>
+              <script src="js/darkMode.js"></script>
+            </ion-buttons>
+            <ion-buttons>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content id="content">
+          <ion-list lines="">
+            <ion-reorder-group id="pets" disabled="false"> </ion-reorder-group>
+            <script>
+              function iconPets(petType) {
+                if (petType == 'Dog') {
+                  return "paw-outline"
+                }
+                else if (petType == 'Cat') {
+                  return "logo-octocat"
+                }
+                else if (petType == 'Bird') {
+                  return "logo-twitter"
+                }
+                else if (petType == 'Fish') {
+                  return "fish-outline"
+                }
+                else if (petType == 'Other') {
+                  return "planet-outline"
+                }
+              }
+              const reorderGroup = document.querySelector('ion-reorder-group');
+
+              let items = JSON.parse(localStorage.getItem("allPets"));
+              reorderItems(items);
+
+              reorderGroup.addEventListener('ionItemReorder', ({ detail }) => {
+                let items = JSON.parse(localStorage.getItem("allPets"));
+                // Before complete is called with the items they will remain in the
+                // order before the drag
+                console.log('Before complete', items);
+
+                // Finish the reorder and position the item in the DOM based on
+                // where the gesture ended. Update the items variable to the
+                // new order of items
+                items = detail.complete(items);
+
+                // Reorder the items in the DOM
+                reorderItems(items);
+
+                // After complete is called the items will be in the new order
+                console.log('After complete', items);
+                localStorage.setItem("allPets", JSON.stringify(items));
+              });
+
+              function reorderItems(items) {
+                reorderGroup.replaceChildren();
+
+                let reordered = '';
+                if (items != null) {
+                  for (var i = 0; i < items.length; i++) {
+                    const itemS = items[i];
+
+                    reordered += `
+                  <ion-item>
+                    <ion-icon size="large" name="${iconPets(itemS.typePetLocal)}" slot="start"></ion-icon>
+                  <ion-label>
+                    <h1>${itemS.namePetLocal}</h1>
+                    <p>Birthday/Adopted: ${itemS.datPetLocal}</p>
+                    <p>Creation date: ${itemS.adoptionDate}</p>
+                    <ion-buttons>
+                      <ion-button onclick="captureImage(${i})">
+                        <ion-icon name="camera"></ion-icon>
+                      </ion-button>
+                    </ion-buttons>
+
+                    <ion-buttons>
+                      <ion-button onclick="openModal(${i})">
+                        <ion-icon color="colorapp" name="images"></ion-icon>
+                      </ion-button>
+                    </ion-buttons>
+                      
+                  </ion-label>
+                  <ion-button color="colorapp" onclick="removePet(${i})">
+                    <ion-icon name="trash-outline"></ion-icon>
+                  </ion-button>
+                  <ion-reorder slot="end"></ion-reorder>
+                  </ion-item>`;
+                  }
+
+                  reorderGroup.innerHTML = reordered;
+                }
+              }
+            </script>
+            </link>
+
+          </ion-list>
+        </ion-content>
+      </ion-tab>
+
+      <ion-tab tab="add">
+        <ion-nav id="add-nav"></ion-nav>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title color="colorapp"><ion-icon name="paw-outline"></ion-icon> MyPets</ion-title>
+            <ion-buttons slot="end">
+              <ion-button href="index.html" color="colorapp" onclick="saveContact()">
+                <ion-icon name="list-outline"></ion-icon>
+                <ion-label>&nbsp;VIEW</ion-label>
+              </ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <ion-title class="ion-margin-top">NEW PET</ion-title>
+          <ion-list>
+            <ion-item>
+              <ion-input id="newPetName" label-placement="fixed" placeholder="Pet name (ex: Spencer)"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-select aria-label="petType" id="type" placeholder="Select Pet Type">
+                <ion-select-option value="Dog">Dog</ion-select-option>
+                <ion-select-option value="Cat">Cat</ion-select-option>
+                <ion-select-option value="Bird">Bird</ion-select-option>
+                <ion-select-option value="Fish">Fish</ion-select-option>
+                <ion-select-option value="Other">Other</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+
+              <ion-input max="" id="newAdopDate" type="Date" placeholder="Birthday/Adoption Date dd/mm/yyyy">
+                <!-- <ion-label text="Date" position="Stacked" ></ion-label> -->
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-textarea placeholder="Enter the Medical History of your pet if required." id="medicalHistory">
+              </ion-textarea>
+            </ion-item>
+            <ion-button class="custom-textarea" expand="full" color="colorapp" onclick="savePet()">
+              <ion-icon name="save-outline"></ion-icon>
+              <ion-label>&nbsp;SAVE PET</ion-label>
+            </ion-button>
+            <div id="routerDivLink">
+              <ion-router-link id="routerLink"></ion-router-link>
+            </div>
+
+            <img id="imagen" src="" width="50%">
+          </ion-list>
+
+        </ion-content>
+
+      </ion-tab>
+
+      <ion-tab tab="about">
+        <ion-nav id="about-nav"></ion-nav>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title color="colorapp"><ion-icon name="paw-outline"></ion-icon> MyPets</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <ion-card class="card">
+
+            <ion-card-header>
+              <ion-card-title>MY PETS PRO</ion-card-title>
+              <ion-card-subtitle>Cristhian Mauricio Canon Pienda</ion-card-subtitle>
+            </ion-card-header>
+
+            <ion-card-content>
+              My Pets PRO is an mobile application that allows a pet owner to make a book of its pet. By simply adding
+              name, type, birth you can add to the list. In addition, you can see photo saved of the pets as well as
+              take images to save it in its gallery.
+            </ion-card-content>
+          </ion-card>
+
+
+        </ion-content>
+      </ion-tab>
+
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="list">
+          <ion-icon name="albums"></ion-icon>
+          List
+        </ion-tab-button>
+        <ion-tab-button tab="add">
+          <ion-icon name="add-circle"></ion-icon>
+          Add
+        </ion-tab-button>
+        <ion-tab-button tab="about">
+          <ion-icon name="person"></ion-icon>
+          About
+        </ion-tab-button>
+      </ion-tab-bar>
+
+    </ion-tabs>
+
+    <!-- </div> -->
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+  </ion-app>
+</body>
+
+</html>

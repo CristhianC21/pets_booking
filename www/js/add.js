@@ -7,7 +7,7 @@ async function savePet() {
     petType = document.querySelector('#type');
     petDate = document.getElementById("newAdopDate");
     medicalHistory = document.getElementById("medicalHistory");
-    console.log("PET TYPE+___>",petType.value);
+    console.log("PET TYPE+___>", petType.value);
     console.log(petName.value, petType.value, petDate.value, medicalHistory.value);
 
     if (petName.value == "" || petType.value == "" || petDate.value == "") {
@@ -26,13 +26,13 @@ async function savePet() {
                 text: "OK",
                 role: "confirm",
                 handler: () => {
-                    sendNewPet(quantityPets,petName.value, petType.value, petDate.value, medicalHistory.value);
+                    sendNewPet(quantityPets, petName.value, petType.value, petDate.value, medicalHistory.value);
                     loadPets();
                     document.querySelector('#tabMain').select('list');
-                    
+
                     petName.value = '';
                     petName.placeholder = 'Pet name (ex: Spencer)';
-                    document.querySelector('ion-select').innerHTML = 'Select Pet Type';
+                    document.querySelector('ion-select').placeholder = 'Select Pet Type';
                     petDate.value = '';
                     petDate.placeholder = 'Birthday/Adoption Date dd/mm/yyyy';
                     medicalHistory.value = '';
@@ -46,21 +46,22 @@ async function savePet() {
     await alert.present();
 }
 
-function getTimestamp(){
-  const date= new Date().toLocaleString()   
-  return date 
+function getTimestamp() {
+    const date = new Date().toLocaleString()
+    return date
 }
 
 
-function sendNewPet(indexPos,namePet, surnamePet, datePet, medicalHistoryPet) {
+function sendNewPet(indexPos, namePet, surnamePet, datePet, medicalHistoryPet) {
     var AllPets = JSON.parse(localStorage.getItem("allPets"));
     const newPet = {
-        indexPosLocal : indexPos,
+        indexPosLocal: indexPos,
         namePetLocal: namePet,
         typePetLocal: surnamePet,
         datPetLocal: datePet,
         medHistoryPetLocal: medicalHistoryPet,
-        adoptionDate: getTimestamp()
+        adoptionDate: getTimestamp(),
+        imageAnimals: []
     };
 
     if (AllPets == null) {
@@ -69,5 +70,5 @@ function sendNewPet(indexPos,namePet, surnamePet, datePet, medicalHistoryPet) {
 
     AllPets.push(newPet);
     localStorage.setItem("allPets", JSON.stringify(AllPets));
-    document.getElementById('routerLink').setAttribute("href","/")
+    document.getElementById('routerLink').setAttribute("href", "/")
 }
