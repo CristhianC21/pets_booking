@@ -48,3 +48,8 @@ Displays an alert if the platform is not connected to a network.
   <source src="resources/myPetsPro.mp4" type="video/mp4">
 </video>
 
+  <iframe width="560" height="315"
+src="https://www.youtube.com/watch?v=Ui30aoTtX_4" 
+frameborder="0" 
+allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+allowfullscreen></iframe>
